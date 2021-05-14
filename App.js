@@ -81,6 +81,7 @@ const Tip = styled.div`
   font-size: 72px;
   z-index: 1;
   font-weight: 700;
+  color: white;
   transition: opacity 300ms;
   ${props => {
     if (props.visible) {
@@ -97,15 +98,13 @@ const Tip = styled.div`
     switch (props.location) {
       case 'LEFT':
         return styled.css`
-          left: 80px;
+          left: 120px;
           top: 40px;
-          color: black;
         `
       case 'RIGHT':
         return styled.css`
           right: 80px;
           top: 40px;
-          color: white;
         `
     }
   }}
@@ -113,10 +112,9 @@ const Tip = styled.div`
 
 function FadeTip(props) {
 
-    const [visible, setVisible] = useState(false)
+    const [visible, setVisible] = useState(true)
 
     useEffect(() => {
-        setVisible(true)
         setTimeout(() => {
             setVisible(false)
         }, 1000)
