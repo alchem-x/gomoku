@@ -1,4 +1,4 @@
-import { html, styled, useState, useEffect, render, createElement } from './modules.js'
+import { html, styled, useState, useEffect, render} from './modules.js'
 
 const BLACK = 'BLACK'
 const WHITE = 'WHITE'
@@ -63,7 +63,7 @@ function Lattice(props) {
             <${LineX} />
             <${LineY} />
             <${Piece} color=${props.color} onMouseDown="${props.onPut}" />
-        <//>
+        </Box>
     `
 }
 
@@ -98,12 +98,12 @@ const Tip = styled.div`
     switch (props.location) {
       case 'LEFT':
         return styled.css`
-          left: 120px;
+          left: 20%;
           top: 40px;
         `
       case 'RIGHT':
         return styled.css`
-          right: 80px;
+          right: 20%;
           top: 40px;
         `
     }
@@ -117,7 +117,7 @@ function FadeTip(props) {
     useEffect(() => {
         setTimeout(() => {
             setVisible(false)
-        }, 1000)
+        }, 10000)
     }, [])
 
     if (props.color === WHITE) {
@@ -141,7 +141,7 @@ async function showTip(color) {
     `, div)
     setTimeout(() => {
         div.remove()
-    }, 2000)
+    }, 20000)
 
 }
 
