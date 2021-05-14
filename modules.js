@@ -1,5 +1,5 @@
 const htm = window.htm
-const { createElement, useState } = window.React
+const { createElement, useState, useEffect } = window.React
 const { render } = window.ReactDOM
 const styled = window.styled
 
@@ -10,5 +10,6 @@ export {
     styled,
     render,
     useState,
+    useEffect,
     createElement,
 }
