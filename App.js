@@ -115,14 +115,13 @@ function inRange(gi, ii) {
     return gi >= 0 && gi < SIZE && ii >= 0 && ii < SIZE
 }
 
-
 function isWinner(table, gi, ii) {
     const color = table[gi][ii].color
-    console.log('color',color)
+
     function getPieceCount(line) {
         let sum = 1
         for (const fn of line) {
-            for (let i = 1; i < WINNER_COUNT ; i++) {
+            for (let i = 1; i < WINNER_COUNT; i++) {
                 const [ngi, nii] = fn(i)
                 if (!inRange(ngi, nii)) {
                     break
@@ -153,7 +152,6 @@ function isWinner(table, gi, ii) {
         (i) => [gi + i, ii - i],
         (i) => [gi - i, ii + i],
     ]
-    console.log(getPieceCount(line1))
     return getPieceCount(line1) >= WINNER_COUNT
         || getPieceCount(line2) >= WINNER_COUNT
         || getPieceCount(line3) >= WINNER_COUNT
@@ -237,16 +235,16 @@ export default function App(props) {
     }
 
     return html`
+        <${WinnerTip} winnerColor=${winnerColor} onReset=${resetTable} />
         <${Board}>
-            <${WinnerTip} winnerColor=${winnerColor} onReset=${resetTable}/>
-                ${table.map((group, groupIndex) => html`
-                            ${group.map((item, itemIndex) => {
-                                return html`
-                                    <${Lattice} color="${item.color}" onPut="${() => handlePut(groupIndex, itemIndex)}" />
-                                `
-                            })}
-                        `
-                )}
+            ${table.map((group, groupIndex) => html`
+                        ${group.map((item, itemIndex) => {
+                            return html`
+                                <${Lattice} color="${item.color}" onPut="${() => handlePut(groupIndex, itemIndex)}" />
+                            `
+                        })}
+                    `
+            )}
         </Board>
     `
 }
