@@ -91,6 +91,7 @@ function nextColor(color) {
 
 
 const Board = styled.div`
+  position: relative;
   display: grid;
   padding: 16px;
   grid-template-columns: repeat(15, 44px);
@@ -158,15 +159,30 @@ function isWinner(table, gi, ii) {
 }
 
 const WinnerTipBox = styled.div`
-  position: fixed;
-  font-size: 72px;
+  position: absolute;
+  display: flex;
+  justify-content: center;
   z-index: 1;
-  font-weight: 700;
   top: 20%;
-  color: white;
+  left: 0;
+  right: 0;
   text-align: center;
+`
+
+const WinnerTipText = styled.span`
+  border-radius: 10px;
+  padding: 8px 32px;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(2px);
   text-shadow: 1px 1px 3px rgb(36 37 47 / 25%);
+  font-weight: 700;
+  font-size: 72px;
   cursor: default;
+  ${props => {
+    return styled.css`
+      color: ${props.color};
+    `
+  }}
 `
 
 function WinnerTip(props) {
@@ -174,6 +190,8 @@ function WinnerTip(props) {
         return ''
     }
     let colorText
+    let textColor
+    let emColor
     switch (props.winnerColor) {
         case PIECE_COLOR.BLACK:
             colorText = '黑'
@@ -184,7 +202,7 @@ function WinnerTip(props) {
     }
     return html`
         <${WinnerTipBox}>
-            <span>五子连珠！${colorText}胜！</span>
+            <${WinnerTipText} color="#fff">五子连珠：${colorText}胜</WinnerTipText>
         </WinnerTipBox>
     `
 
@@ -271,6 +289,7 @@ export default function App(props) {
 
     function resetTable() {
         setTable(initialTable())
+        setTableHistory([initialTable()])
         setCurrentColor(PIECE_COLOR.BLACK)
         setWinnerColor('')
     }
@@ -289,9 +308,9 @@ export default function App(props) {
 
     return html`
         <${Container}>
-            <${WinnerTip} winnerColor=${winnerColor} />
             <${Content}>
                 <${Board}>
+                    <${WinnerTip} winnerColor=${winnerColor} />
                     ${table.map((group, groupIndex) => html`
                                 ${group.map((item, itemIndex) => {
                                     return html`

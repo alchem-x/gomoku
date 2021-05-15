@@ -72,5 +72,5 @@ export function showTip(type) {
     `, div)
     setTimeout(() => {
         div.remove()
-    }, 2000)
+    }, 1300)
 }
