@@ -13,6 +13,7 @@ const Tip = styled.div`
   color: white;
   transition: opacity 300ms;
   cursor: default;
+  text-shadow: 1px 1px 3px rgb(36 37 47 / 25%);
   ${props => {
     if (props.visible) {
       return styled.css`
@@ -60,6 +61,7 @@ function FadeTip(props) {
             <${Tip} type=${TIP_TYPE.LEFT} visible=${visible}>啪！</Tip>
         `
     }
+    return ''
 }
 
 export function showTip(type) {

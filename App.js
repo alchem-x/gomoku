@@ -7,6 +7,7 @@ const PIECE_COLOR = {
 }
 
 const SIZE = 15
+const WINNER_COUNT = 5
 
 const Box = styled.div`
   display: flex;
@@ -51,7 +52,6 @@ const Piece = styled.div`
   height: 44px;
   border-radius: 24px;
   background-color: #fff;
-  text-shadow: 1px 1px 3px rgb(36 37 47 / 25%);
   ${props => {
     switch (props.color) {
       case PIECE_COLOR.BLACK:
@@ -111,16 +111,103 @@ function initialTable() {
     return Array.from({ length: SIZE }).map(() => Array.from({ length: SIZE }).map(() => ({})))
 }
 
+function inRange(gi, ii) {
+    return gi >= 0 && gi < SIZE && ii >= 0 && ii < SIZE
+}
+
+
+function isWinner(table, gi, ii) {
+    const color = table[gi][ii].color
+    console.log('color',color)
+    function getPieceCount(line) {
+        let sum = 1
+        for (const fn of line) {
+            for (let i = 1; i < WINNER_COUNT ; i++) {
+                const [ngi, nii] = fn(i)
+                if (!inRange(ngi, nii)) {
+                    break
+                }
+                if (table[ngi][nii].color !== color) {
+                    break
+                }
+                sum++
+            }
+        }
+        return sum
+    }
+
+    const line1 = [
+        (i) => [gi + i, ii],
+        (i) => [gi - i, ii],
+    ]
+
+    const line2 = [
+        (i) => [gi, ii + i],
+        (i) => [gi, ii - i],
+    ]
+    const line3 = [
+        (i) => [gi + i, ii + i],
+        (i) => [gi - i, ii - i],
+    ]
+    const line4 = [
+        (i) => [gi + i, ii - i],
+        (i) => [gi - i, ii + i],
+    ]
+    console.log(getPieceCount(line1))
+    return getPieceCount(line1) >= WINNER_COUNT
+        || getPieceCount(line2) >= WINNER_COUNT
+        || getPieceCount(line3) >= WINNER_COUNT
+        || getPieceCount(line4) >= WINNER_COUNT;
+}
+
+const WinnerTipBox = styled.div`
+  position: fixed;
+  font-size: 72px;
+  z-index: 1;
+  font-weight: 700;
+  top: 20%;
+  color: white;
+  width: 100%;
+  text-align: center;
+  text-shadow: 1px 1px 3px rgb(36 37 47 / 25%);
+  cursor: pointer;
+`
+
+function WinnerTip(props) {
+    if (!props.winnerColor) {
+        return ''
+    }
+    let colorText
+    switch (props.winnerColor) {
+        case PIECE_COLOR.BLACK:
+            colorText = '黑'
+            break
+        case PIECE_COLOR.WHITE:
+            colorText = '白'
+            break
+    }
+    return html`
+        <${WinnerTipBox} onClick=${props.onReset}>
+                五子连珠！${colorText}胜！
+        </WinnerTipBox>
+    `
+
+}
+
 export default function App(props) {
 
     const [table, setTable] = useState(initialTable())
     const [currentColor, setCurrentColor] = useState(PIECE_COLOR.BLACK)
+    const [winnerColor, setWinnerColor] = useState('')
 
     function handlePut(gi, ii) {
+        if (winnerColor) {
+            return
+        }
         if (table[gi][ii].color) {
             return
         }
-        setTable(table.map((group, groupIndex) => {
+        const newTable = table.map((group, groupIndex) => {
             if (groupIndex !== gi) {
                 return group
             } else {
@@ -135,21 +222,31 @@ export default function App(props) {
                     }
                 })
             }
-        }))
+        })
+        setTable(newTable)
 
+        if (isWinner(newTable, gi, ii)) {
+            setWinnerColor(currentColor)
+        }
         showTip(getTipType(currentColor))
+    }
+
+    function resetTable() {
+        setTable(initialTable())
+        setWinnerColor('')
     }
 
     return html`
         <${Board}>
-            ${table.map((group, groupIndex) => html`
-                        ${group.map((item, itemIndex) => {
-                            return html`
-                                <${Lattice} color="${item.color}" onPut="${() => handlePut(groupIndex, itemIndex)}" />
-                            `
-                        })}
-                    `
-            )}
+            <${WinnerTip} winnerColor=${winnerColor} onReset=${resetTable}/>
+                ${table.map((group, groupIndex) => html`
+                            ${group.map((item, itemIndex) => {
+                                return html`
+                                    <${Lattice} color="${item.color}" onPut="${() => handlePut(groupIndex, itemIndex)}" />
+                                `
+                            })}
+                        `
+                )}
         </Board>
     `
 }
