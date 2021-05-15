@@ -52,6 +52,7 @@ const Piece = styled.div`
   height: 40px;
   border-radius: 20px;
   background-color: #fff;
+  box-shadow: rgba(0, 0, 0, 0) 0 0 0 0, rgba(0, 0, 0, 0) 0 0 0 0, rgba(0, 0, 0, 0.1) 0 1px 3px 0, rgba(0, 0, 0, 0.06) 0 1px 2px 0;
   ${props => {
     switch (props.color) {
       case PIECE_COLOR.BLACK:
@@ -163,7 +164,6 @@ const WinnerTipBox = styled.div`
   font-weight: 700;
   top: 20%;
   color: white;
-  width: 100%;
   text-align: center;
   text-shadow: 1px 1px 3px rgb(36 37 47 / 25%);
   cursor: default;
@@ -184,7 +184,7 @@ function WinnerTip(props) {
     }
     return html`
         <${WinnerTipBox}>
-                五子连珠！${colorText}胜！
+            <span>五子连珠！${colorText}胜！</span>
         </WinnerTipBox>
     `
 
@@ -207,7 +207,7 @@ const Sidebar = styled.div`
   padding: 16px;
 `
 
-const OneMoreGame = styled.button`
+const Button = styled.button`
   box-sizing: border-box;
   min-width: 120px;
   height: 40px;
@@ -233,6 +233,7 @@ const OneMoreGame = styled.button`
 export default function App(props) {
 
     const [table, setTable] = useState(initialTable())
+    const [tableHistory, setTableHistory] = useState([table])
     const [currentColor, setCurrentColor] = useState(PIECE_COLOR.BLACK)
     const [winnerColor, setWinnerColor] = useState('')
 
@@ -259,6 +260,7 @@ export default function App(props) {
                 })
             }
         })
+        setTableHistory([...tableHistory, newTable])
         setTable(newTable)
 
         if (isWinner(newTable, gi, ii)) {
@@ -270,6 +272,18 @@ export default function App(props) {
     function resetTable() {
         setTable(initialTable())
         setCurrentColor(PIECE_COLOR.BLACK)
+        setWinnerColor('')
+    }
+
+    function repentanceStep() {
+        if (tableHistory.length === 1) {
+            return
+        }
+        const newTableHistory = [...tableHistory]
+        newTableHistory.pop()
+        setTable(newTableHistory[newTableHistory.length - 1])
+        setTableHistory(newTableHistory)
+        setCurrentColor(nextColor(currentColor))
         setWinnerColor('')
     }
 
@@ -289,9 +303,15 @@ export default function App(props) {
                 </Board>
                 <${Sidebar}>
                     <${Piece} color=${currentColor} style=${{ marginTop: '32px' }} />
-                    <${OneMoreGame} onClick=${resetTable} style=${{ marginTop: '24px' }}>
+                    <${Button} onClick=${resetTable} style=${{ marginTop: '24px' }}>
                         再来一局
-                    </OneMoreGame>
+                    </Button>
+                    ${tableHistory.length > 1 && html`
+                        <br />
+                        <${Button} style=${{ marginTop: '8px' }} onClick=${repentanceStep}>
+                            悔棋一步
+                        </Button>
+                    `}
                 </Sidebar>
             </Content>
         </Container>
