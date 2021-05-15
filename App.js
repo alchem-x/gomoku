@@ -117,7 +117,7 @@ function FadeTip(props) {
     useEffect(() => {
         setTimeout(() => {
             setVisible(false)
-        }, 10000)
+        }, 1000)
     }, [])
 
     if (props.color === WHITE) {
@@ -141,7 +141,7 @@ async function showTip(color) {
     `, div)
     setTimeout(() => {
         div.remove()
-    }, 20000)
+    }, 2000)
 
 }
 
