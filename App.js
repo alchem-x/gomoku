@@ -155,7 +155,7 @@ function isWinner(table, gi, ii) {
     return getPieceCount(line1) >= WINNER_COUNT
         || getPieceCount(line2) >= WINNER_COUNT
         || getPieceCount(line3) >= WINNER_COUNT
-        || getPieceCount(line4) >= WINNER_COUNT;
+        || getPieceCount(line4) >= WINNER_COUNT
 }
 
 const WinnerTipBox = styled.div`
