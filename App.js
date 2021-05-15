@@ -15,8 +15,8 @@ const Box = styled.div`
   align-items: center;
   position: relative;
   box-sizing: border-box;
-  width: 48px;
-  height: 48px;
+  width: 44px;
+  height: 44px;
   ${props => {
     if (props.empty) {
       return styled.css`
@@ -48,9 +48,9 @@ const LineY = styled.span`
 
 const Piece = styled.div`
   position: relative;
-  width: 44px;
-  height: 44px;
-  border-radius: 24px;
+  width: 40px;
+  height: 40px;
+  border-radius: 20px;
   background-color: #fff;
   ${props => {
     switch (props.color) {
@@ -92,8 +92,8 @@ function nextColor(color) {
 const Board = styled.div`
   display: grid;
   padding: 16px;
-  grid-template-columns: repeat(15, 48px);
-  grid-template-rows: repeat(15, 48px);
+  grid-template-columns: repeat(15, 44px);
+  grid-template-rows: repeat(15, 44px);
 `
 
 function getTipType(color) {
@@ -166,7 +166,7 @@ const WinnerTipBox = styled.div`
   width: 100%;
   text-align: center;
   text-shadow: 1px 1px 3px rgb(36 37 47 / 25%);
-  cursor: pointer;
+  cursor: default;
 `
 
 function WinnerTip(props) {
@@ -183,7 +183,7 @@ function WinnerTip(props) {
             break
     }
     return html`
-        <${WinnerTipBox} onClick=${props.onReset}>
+        <${WinnerTipBox}>
                 五子连珠！${colorText}胜！
         </WinnerTipBox>
     `
@@ -192,15 +192,43 @@ function WinnerTip(props) {
 
 const Container = styled.div`
   display: flex;
-  gap: 16px;
   justify-content: center;
+  align-items: center;
+  min-width: fit-content;
+  height: 100vh;
 `
 
+const Content = styled.div`
+  display: flex;
+  gap: 16px;
+`
 
 const Sidebar = styled.div`
-
+  padding: 16px;
 `
 
+const OneMoreGame = styled.button`
+  box-sizing: border-box;
+  min-width: 120px;
+  height: 40px;
+  font-size: 24px;
+  border: 1px solid transparent;
+  color: #fff;
+  font-weight: 500;
+  background-color: #7e7e7e;
+  outline: none;
+  cursor: pointer;
+  border-radius: 2px;
+  box-shadow: rgba(0, 0, 0, 0) 0 0 0 0, rgba(0, 0, 0, 0) 0 0 0 0, rgba(0, 0, 0, 0.1) 0 1px 3px 0, rgba(0, 0, 0, 0.06) 0 1px 2px 0;
+
+  &:hover {
+    background: #8e8e8e;
+  }
+
+  &:active {
+    background: #6e6e6e;
+  }
+`
 
 export default function App(props) {
 
@@ -247,20 +275,25 @@ export default function App(props) {
 
     return html`
         <${Container}>
-            <${WinnerTip} winnerColor=${winnerColor} onReset=${resetTable} />
-            <${Board}>
-                ${table.map((group, groupIndex) => html`
-                            ${group.map((item, itemIndex) => {
-                                return html`
-                                    <${Lattice} color=${item.color} onPut=${() => handlePut(groupIndex, itemIndex)} />
-                                `
-                            })}
-                        `
-                )}
-            </Board>
-            <${Sidebar}>
-                <${Piece} color=${currentColor} style=${{ top: '8%' }} />
-            </Sidebar>
+            <${WinnerTip} winnerColor=${winnerColor} />
+            <${Content}>
+                <${Board}>
+                    ${table.map((group, groupIndex) => html`
+                                ${group.map((item, itemIndex) => {
+                                    return html`
+                                        <${Lattice} color=${item.color} onPut=${() => handlePut(groupIndex, itemIndex)} />
+                                    `
+                                })}
+                            `
+                    )}
+                </Board>
+                <${Sidebar}>
+                    <${Piece} color=${currentColor} style=${{ marginTop: '32px' }} />
+                    <${OneMoreGame} onClick=${resetTable} style=${{ marginTop: '24px' }}>
+                        再来一局
+                    </OneMoreGame>
+                </Sidebar>
+            </Content>
         </Container>
     `
 }

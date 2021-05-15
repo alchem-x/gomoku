@@ -29,7 +29,7 @@ const Tip = styled.div`
     switch (props.type) {
       case TIP_TYPE.LEFT:
         return styled.css`
-          left: 20%;
+          left: 10%;
           top: 40px;
         `
       case TIP_TYPE.RIGHT:
