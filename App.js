@@ -1,7 +1,11 @@
-import { html, styled, useState, useEffect, render} from './modules.js'
+import { html, styled, useState } from './modules.js'
+import { showTip, TIP_TYPE } from './tip.js'
 
-const BLACK = 'BLACK'
-const WHITE = 'WHITE'
+const PIECE_COLOR = {
+    BLACK: 'BLACK',
+    WHITE: 'WHITE',
+}
+
 const SIZE = 15
 
 const Box = styled.div`
@@ -10,8 +14,19 @@ const Box = styled.div`
   align-items: center;
   position: relative;
   box-sizing: border-box;
-  width: 60px;
-  height: 60px;
+  width: 50px;
+  height: 50px;
+  ${props => {
+    if (props.empty) {
+      return styled.css`
+        cursor: pointer;
+      `
+    } else {
+      return styled.css`
+        cursor: not-allowed;
+      `
+    }
+  }}
 `
 
 const LineX = styled.span`
@@ -39,18 +54,13 @@ const Piece = styled.div`
   text-shadow: 1px 1px 3px rgb(36 37 47 / 25%);
   ${props => {
     switch (props.color) {
-      case BLACK:
+      case PIECE_COLOR.BLACK:
         return styled.css`
           background-color: #000;
         `
-      case WHITE:
+      case PIECE_COLOR.WHITE:
         return styled.css`
           background-color: #fff;
-        `
-      default:
-        return styled.css`
-          cursor: pointer;
-          opacity: 0;
         `
     }
   }}
@@ -59,108 +69,54 @@ const Piece = styled.div`
 function Lattice(props) {
 
     return html`
-        <${Box}>
+        <${Box} onMouseDown="${props.onPut}" empty=${!props.color}>
             <${LineX} />
             <${LineY} />
-            <${Piece} color=${props.color} onMouseDown="${props.onPut}" />
+            ${props.color && html`
+                <${Piece} color=${props.color} />
+            `}
         </Box>
     `
 }
 
 function nextColor(color) {
-    if (color === BLACK) {
-        return WHITE
+    if (color === PIECE_COLOR.BLACK) {
+        return PIECE_COLOR.WHITE
     }
-    if (color === WHITE) {
-        return BLACK
-    }
-}
-
-const Tip = styled.div`
-  position: fixed;
-  font-size: 72px;
-  z-index: 1;
-  font-weight: 700;
-  color: white;
-  transition: opacity 300ms;
-  ${props => {
-    if (props.visible) {
-      return styled.css`
-        opacity: 1;
-      `
-    } else {
-      return styled.css`
-        opacity: 0;
-      `
-    }
-  }}
-  ${props => {
-    switch (props.location) {
-      case 'LEFT':
-        return styled.css`
-          left: 20%;
-          top: 40px;
-        `
-      case 'RIGHT':
-        return styled.css`
-          right: 20%;
-          top: 40px;
-        `
-    }
-  }}
-`
-
-function FadeTip(props) {
-
-    const [visible, setVisible] = useState(true)
-
-    useEffect(() => {
-        setTimeout(() => {
-            setVisible(false)
-        }, 1000)
-    }, [])
-
-    if (props.color === WHITE) {
-        return html`
-            <${Tip} location="RIGHT" visible=${visible}>咚！</Tip>
-        `
-    }
-
-    if (props.color === BLACK) {
-        return html`
-            <${Tip} location="LEFT" visible=${visible}>啪！</Tip>
-        `
+    if (color === PIECE_COLOR.WHITE) {
+        return PIECE_COLOR.BLACK
     }
 }
 
-async function showTip(color) {
-    const div = document.createElement('div')
-    document.body.insertAdjacentElement('afterbegin', div)
-    render(html`
-        <${FadeTip} color=${color}/>
-    `, div)
-    setTimeout(() => {
-        div.remove()
-    }, 2000)
-
-}
 
 const Board = styled.div`
   display: grid;
   padding: 30px;
   margin: 0 auto;
-  background-color: #d2d2d2;
-  grid-template-columns: repeat(15, 60px);
-  grid-template-rows: repeat(15, 60px);
+  grid-template-columns: repeat(15, 50px);
+  grid-template-rows: repeat(15, 50px);
   width: fit-content;
 `
 
+function getTipType(color) {
+    if (color === PIECE_COLOR.BLACK) {
+        return TIP_TYPE.LEFT
+    }
+    if (color === PIECE_COLOR.WHITE) {
+        return TIP_TYPE.RIGHT
+    }
+}
+
+function initialTable() {
+    return Array.from({ length: SIZE }).map(() => Array.from({ length: SIZE }).map(() => ({})))
+}
+
 export default function App(props) {
 
-    const [table, setTable] = useState(Array.from({ length: SIZE }).map(() => Array.from({ length: SIZE }).map(() => ({}))))
-    const [currentColor, setCurrentColor] = useState(BLACK)
+    const [table, setTable] = useState(initialTable())
+    const [currentColor, setCurrentColor] = useState(PIECE_COLOR.BLACK)
 
-    async function handlePut(gi, ii) {
+    function handlePut(gi, ii) {
         if (table[gi][ii].color) {
             return
         }
@@ -180,7 +136,8 @@ export default function App(props) {
                 })
             }
         }))
-        await showTip(currentColor)
+
+        showTip(getTipType(currentColor))
     }
 
     return html`
