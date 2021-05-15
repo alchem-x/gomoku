@@ -6,7 +6,7 @@ export const TIP_TYPE = {
 }
 
 const Tip = styled.div`
-  position: fixed;
+  position: absolute;
   font-size: 72px;
   z-index: 1;
   font-weight: 700;
@@ -29,12 +29,12 @@ const Tip = styled.div`
     switch (props.type) {
       case TIP_TYPE.LEFT:
         return styled.css`
-          left: 10%;
+          left: 40px;
           top: 40px;
         `
       case TIP_TYPE.RIGHT:
         return styled.css`
-          right: 20%;
+          right: 40px;
           top: 40px;
         `
     }
@@ -47,30 +47,30 @@ function FadeTip(props) {
     useEffect(() => {
         setTimeout(() => {
             setVisible(false)
-        }, 1000)
+        }, 1_000)
     }, [])
 
     if (props.type === TIP_TYPE.RIGHT) {
         return html`
-            <${Tip} type=${TIP_TYPE.RIGHT} visible=${visible}>咚！</Tip>
+            <${Tip} type=${TIP_TYPE.RIGHT} visible=${visible}>咚</Tip>
         `
     }
 
     if (props.type === TIP_TYPE.LEFT) {
         return html`
-            <${Tip} type=${TIP_TYPE.LEFT} visible=${visible}>啪！</Tip>
+            <${Tip} type=${TIP_TYPE.LEFT} visible=${visible}>啪</Tip>
         `
     }
     return ''
 }
 
-export function showTip(type) {
+export function showTip(type, element) {
     const div = document.createElement('div')
-    document.body.insertAdjacentElement('afterbegin', div)
+    element.insertAdjacentElement('afterbegin', div)
     render(html`
         <${FadeTip} type=${type} />
     `, div)
     setTimeout(() => {
         div.remove()
-    }, 1300)
+    }, 1_300)
 }

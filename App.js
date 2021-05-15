@@ -1,4 +1,4 @@
-import { html, styled, useState } from './modules.js'
+import { html, styled, useRef, useState } from './modules.js'
 import { showTip, TIP_TYPE } from './tip.js'
 
 const PIECE_COLOR = {
@@ -80,7 +80,7 @@ function Lattice(props) {
     `
 }
 
-function nextColor(color) {
+function toggleColor(color) {
     if (color === PIECE_COLOR.BLACK) {
         return PIECE_COLOR.WHITE
     }
@@ -177,12 +177,8 @@ const WinnerTipText = styled.span`
   text-shadow: 1px 1px 3px rgb(36 37 47 / 25%);
   font-weight: 700;
   font-size: 72px;
+  color: #fff;
   cursor: default;
-  ${props => {
-    return styled.css`
-      color: ${props.color};
-    `
-  }}
 `
 
 function WinnerTip(props) {
@@ -190,8 +186,6 @@ function WinnerTip(props) {
         return ''
     }
     let colorText
-    let textColor
-    let emColor
     switch (props.winnerColor) {
         case PIECE_COLOR.BLACK:
             colorText = '黑'
@@ -202,10 +196,9 @@ function WinnerTip(props) {
     }
     return html`
         <${WinnerTipBox}>
-            <${WinnerTipText} color="#fff">五子连珠：${colorText}胜</WinnerTipText>
+            <${WinnerTipText}>五子连珠：${colorText}胜</WinnerTipText>
         </WinnerTipBox>
     `
-
 }
 
 const Container = styled.div`
@@ -213,7 +206,7 @@ const Container = styled.div`
   justify-content: center;
   align-items: center;
   min-width: fit-content;
-  height: 100vh;
+  min-height: 100vh;
 `
 
 const Content = styled.div`
@@ -248,12 +241,18 @@ const Button = styled.button`
   }
 `
 
+const TipContainer = styled.div`
+  position: absolute;
+  inset: 0;
+`
+
 export default function App(props) {
 
     const [table, setTable] = useState(initialTable())
     const [tableHistory, setTableHistory] = useState([table])
     const [currentColor, setCurrentColor] = useState(PIECE_COLOR.BLACK)
     const [winnerColor, setWinnerColor] = useState('')
+    const tipContainerRef = useRef()
 
     function handlePut(gi, ii) {
         if (winnerColor) {
@@ -270,7 +269,7 @@ export default function App(props) {
                     if (itemIndex !== ii) {
                         return item
                     } else if (!item.color) {
-                        setCurrentColor(nextColor(currentColor))
+                        setCurrentColor(toggleColor(currentColor))
                         return { ...item, color: currentColor }
                     } else {
                         return item
@@ -284,7 +283,9 @@ export default function App(props) {
         if (isWinner(newTable, gi, ii)) {
             setWinnerColor(currentColor)
         }
-        showTip(getTipType(currentColor))
+        if (tipContainerRef.current) {
+            showTip(getTipType(currentColor), tipContainerRef.current)
+        }
     }
 
     function resetTable() {
@@ -302,7 +303,7 @@ export default function App(props) {
         newTableHistory.pop()
         setTable(newTableHistory[newTableHistory.length - 1])
         setTableHistory(newTableHistory)
-        setCurrentColor(nextColor(currentColor))
+        setCurrentColor(toggleColor(currentColor))
         setWinnerColor('')
     }
 
@@ -311,6 +312,7 @@ export default function App(props) {
             <${Content}>
                 <${Board}>
                     <${WinnerTip} winnerColor=${winnerColor} />
+                    <${TipContainer} ref=${tipContainerRef} />
                     ${table.map((group, groupIndex) => html`
                                 ${group.map((item, itemIndex) => {
                                     return html`
