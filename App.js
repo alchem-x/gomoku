@@ -15,8 +15,8 @@ const Box = styled.div`
   align-items: center;
   position: relative;
   box-sizing: border-box;
-  width: 50px;
-  height: 50px;
+  width: 48px;
+  height: 48px;
   ${props => {
     if (props.empty) {
       return styled.css`
@@ -69,7 +69,7 @@ const Piece = styled.div`
 function Lattice(props) {
 
     return html`
-        <${Box} onMouseDown="${props.onPut}" empty=${!props.color}>
+        <${Box} onMouseDown=${props.onPut} empty=${!props.color}>
             <${LineX} />
             <${LineY} />
             ${props.color && html`
@@ -91,11 +91,9 @@ function nextColor(color) {
 
 const Board = styled.div`
   display: grid;
-  padding: 30px;
-  margin: 0 auto;
-  grid-template-columns: repeat(15, 50px);
-  grid-template-rows: repeat(15, 50px);
-  width: fit-content;
+  padding: 16px;
+  grid-template-columns: repeat(15, 48px);
+  grid-template-rows: repeat(15, 48px);
 `
 
 function getTipType(color) {
@@ -192,6 +190,18 @@ function WinnerTip(props) {
 
 }
 
+const Container = styled.div`
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+`
+
+
+const Sidebar = styled.div`
+
+`
+
+
 export default function App(props) {
 
     const [table, setTable] = useState(initialTable())
@@ -231,20 +241,26 @@ export default function App(props) {
 
     function resetTable() {
         setTable(initialTable())
+        setCurrentColor(PIECE_COLOR.BLACK)
         setWinnerColor('')
     }
 
     return html`
-        <${WinnerTip} winnerColor=${winnerColor} onReset=${resetTable} />
-        <${Board}>
-            ${table.map((group, groupIndex) => html`
-                        ${group.map((item, itemIndex) => {
-                            return html`
-                                <${Lattice} color="${item.color}" onPut="${() => handlePut(groupIndex, itemIndex)}" />
-                            `
-                        })}
-                    `
-            )}
-        </Board>
+        <${Container}>
+            <${WinnerTip} winnerColor=${winnerColor} onReset=${resetTable} />
+            <${Board}>
+                ${table.map((group, groupIndex) => html`
+                            ${group.map((item, itemIndex) => {
+                                return html`
+                                    <${Lattice} color=${item.color} onPut=${() => handlePut(groupIndex, itemIndex)} />
+                                `
+                            })}
+                        `
+                )}
+            </Board>
+            <${Sidebar}>
+                <${Piece} color=${currentColor} style=${{ top: '8%' }} />
+            </Sidebar>
+        </Container>
     `
 }
