@@ -135,27 +135,15 @@ function isWinner(table, gi, ii) {
         return sum
     }
 
-    const line1 = [
-        (i) => [gi + i, ii],
-        (i) => [gi - i, ii],
-    ]
+    const lineVertical = [(i) => [gi + i, ii], (i) => [gi - i, ii]]
+    const lineHorizontal = [(i) => [gi, ii + i], (i) => [gi, ii - i]]
+    const lineBackslash = [(i) => [gi + i, ii + i], (i) => [gi - i, ii - i]]
+    const lineSlash = [(i) => [gi + i, ii - i], (i) => [gi - i, ii + i]]
 
-    const line2 = [
-        (i) => [gi, ii + i],
-        (i) => [gi, ii - i],
-    ]
-    const line3 = [
-        (i) => [gi + i, ii + i],
-        (i) => [gi - i, ii - i],
-    ]
-    const line4 = [
-        (i) => [gi + i, ii - i],
-        (i) => [gi - i, ii + i],
-    ]
-    return getPieceCount(line1) >= WINNER_COUNT
-        || getPieceCount(line2) >= WINNER_COUNT
-        || getPieceCount(line3) >= WINNER_COUNT
-        || getPieceCount(line4) >= WINNER_COUNT
+    return getPieceCount(lineVertical) >= WINNER_COUNT
+        || getPieceCount(lineHorizontal) >= WINNER_COUNT
+        || getPieceCount(lineBackslash) >= WINNER_COUNT
+        || getPieceCount(lineSlash) >= WINNER_COUNT
 }
 
 const WinnerTipBox = styled.div`

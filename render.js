@@ -1,4 +1,6 @@
-import { createElement, render } from './modules.js'
+import { html, render } from './modules.js'
 import App from './App.js'
 
-render(createElement(App), document.querySelector('#app'))
+render(html`
+    <${App} />
+`, document.querySelector('#app'))

@@ -12,5 +12,4 @@ export {
     useRef,
     useState,
     useEffect,
-    createElement,
 }

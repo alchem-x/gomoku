@@ -47,7 +47,7 @@ function FadeTip(props) {
     useEffect(() => {
         setTimeout(() => {
             setVisible(false)
-        }, 1_000)
+        }, 1000)
     }, [])
 
     if (props.type === TIP_TYPE.RIGHT) {
@@ -72,5 +72,5 @@ export function showTip(type, element) {
     `, div)
     setTimeout(() => {
         div.remove()
-    }, 1_300)
+    }, 1300)
 }
