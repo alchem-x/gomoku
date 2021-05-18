@@ -13,7 +13,8 @@ const Tip = styled.div`
   color: white;
   transition: opacity 300ms;
   cursor: default;
-  text-shadow: 1px 1px 3px rgb(36 37 47 / 25%);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.10);
+  
   ${props => {
     if (props.visible) {
       return styled.css`

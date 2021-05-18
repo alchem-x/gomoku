@@ -162,7 +162,7 @@ const WinnerTipText = styled.span`
   padding: 8px 32px;
   background: rgba(255, 255, 255, 0.2);
   backdrop-filter: blur(2px);
-  text-shadow: 1px 1px 3px rgb(36 37 47 / 25%);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.10);
   font-weight: 700;
   font-size: 72px;
   color: #fff;
