@@ -6,7 +6,16 @@ const PIECE_COLOR = {
     WHITE: 'WHITE',
 }
 
-const SIZE = 15
+function getSizeFromSearch() {
+    const q = new URLSearchParams(location.search)
+    const size = Number(q.get('size'))
+    if (size && Number.isInteger(size)) {
+        return size
+    }
+}
+
+
+const SIZE = getSizeFromSearch() || 15
 const WINNER_COUNT = 5
 
 const Box = styled.div`
@@ -94,8 +103,8 @@ const Board = styled.div`
   position: relative;
   display: grid;
   padding: 16px;
-  grid-template-columns: repeat(15, 44px);
-  grid-template-rows: repeat(15, 44px);
+  grid-template-columns: repeat(${SIZE}, 44px);
+  grid-template-rows: repeat(${SIZE}, 44px);
 `
 
 function getTipType(color) {
@@ -234,6 +243,16 @@ const TipContainer = styled.div`
   inset: 0;
 `
 
+const BoardLabel = styled.div`
+  cursor: default;
+  font-weight: 500;
+  font-size: 1.5rem;
+  line-height: 1;
+  color: #000;
+  opacity: .7;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.06);
+`
+
 export default function App(props) {
 
     const [table, setTable] = useState(initialTable())
@@ -311,8 +330,9 @@ export default function App(props) {
                     )}
                 </Board>
                 <${Sidebar}>
-                    <${Piece} color=${currentColor} style=${{ marginTop: '32px' }} />
-                    <${Button} onClick=${resetTable} style=${{ marginTop: '24px' }}>
+                    <${Piece} color=${currentColor} style=${{ marginTop: '2rem' }} />
+                    <${BoardLabel} style=${{ marginTop: '1rem' }}>棋盘：${SIZE} x ${SIZE}</BoardLabel>
+                    <${Button} onClick=${resetTable} style=${{ marginTop: '1.5rem' }}>
                         再来一局
                     </Button>
                     ${tableHistory.length > 1 && html`
