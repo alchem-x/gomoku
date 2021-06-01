@@ -1,0 +1,36 @@
+{
+  "name": "gomoku",
+  "version": "1.0.0",
+  "description": "Gomoku",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alchemy-works/gomoku.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/alchemy-works/gomoku/issues"
+  },
+  "homepage": "https://github.com/alchemy-works/gomoku#readme",
+  "devDependencies": {
+    "electron": "^13.0.1",
+    "electron-builder": "^22.10.5"
+  },
+  "dependencies": {
+    "htm": "^3.0.4",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-is": "^17.0.2",
+    "styled-components": "^5.3.0"
+  },
+  "build": {
+    "productName": "Gomoku",
+    "appId": "org.jianzhao.gomoku"
+  }
+}
