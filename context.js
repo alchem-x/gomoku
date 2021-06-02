@@ -166,10 +166,11 @@ const handlers = {
             table: initialTable(state.size),
             tableHistory: [initialTable(state.size)],
             currentColor: PIECE_COLOR.BLACK,
+            previousColor: '',
             winnerColor: '',
         }
     },
-    repentanceStep(state, payload) {
+    repentanceStep5(state, payload) {
         if (state.tableHistory.length === 1) {
             return state
         }
@@ -180,6 +181,31 @@ const handlers = {
             table: newTableHistory[newTableHistory.length - 1],
             tableHistory: newTableHistory,
             currentColor: toggleColor(state.currentColor),
+            winnerColor: '',
+        }
+    },
+    repentanceStep6(state, payload) {
+        if (state.tableHistory.length === 1) {
+            return state
+        }
+        const newTableHistory = [...state.tableHistory]
+        newTableHistory.pop()
+
+        let newPreviousColor
+        if (newTableHistory.length === 1) {
+            newPreviousColor = ''
+        } else if (state.previousColor === state.currentColor) {
+            newPreviousColor = toggleColor(state.currentColor)
+        } else {
+            newPreviousColor = state.previousColor
+        }
+
+        return {
+            ...state,
+            table: newTableHistory[newTableHistory.length - 1],
+            tableHistory: newTableHistory,
+            currentColor: state.previousColor,
+            previousColor: newPreviousColor,
             winnerColor: '',
         }
     },

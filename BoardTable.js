@@ -186,7 +186,7 @@ export default function BoardTable(props) {
 
     function repentanceStep() {
         dispatch({
-            type: 'repentanceStep',
+            type: 'repentanceStep' + type,
         })
     }
 
