@@ -1,5 +1,5 @@
 import { html, Link, styled, useRef } from './modules.js'
-import { MAP_56, PIECE_COLOR, SIZE, toggleColor, useDispatch, useSelector } from './context.js'
+import { MAP_56, PIECE_COLOR, useDispatch, useSelector } from './context.js'
 import Button from './Button.js'
 
 const LatticeContainer = styled.div`
@@ -79,8 +79,12 @@ const BoardContainer = styled.div`
   position: relative;
   display: grid;
   padding: 16px;
-  grid-template-columns: repeat(${SIZE}, 44px);
-  grid-template-rows: repeat(${SIZE}, 44px);
+  ${props => {
+    return styled.css`
+      grid-template-columns: repeat(${props.size}, 44px);
+      grid-template-rows: repeat(${props.size}, 44px);
+    `
+  }}
 `
 
 const WinnerTipBox = styled.div`
@@ -168,8 +172,12 @@ export default function BoardTable(props) {
     const table = useSelector(state => state.table)
     const tableHistory = useSelector(state => state.tableHistory)
     const currentColor = useSelector(state => state.currentColor)
-    const previousColor = useSelector(state => state.previousColor)
+    const size = useSelector(state => state.size)
     const winnerColor = useSelector(state => state.winnerColor)
+
+    function resetTable() {
+        dispatch({ type: 'resetTable' })
+    }
 
     function handlePut(gi, ii) {
         dispatch({
@@ -178,22 +186,15 @@ export default function BoardTable(props) {
         })
     }
 
-    function resetTable() {
-        dispatch({
-            type: 'resetTable',
-        })
-    }
 
     function repentanceStep() {
-        dispatch({
-            type: 'repentanceStep' + type,
-        })
+        dispatch({ type: 'repentanceStep' + type })
     }
 
     return html`
         <${Container}>
             <${Content}>
-                <${BoardContainer}>
+                <${BoardContainer} size=${size}>
                     <${WinnerTip} type=${type} winnerColor=${winnerColor} />
                     <${TipContainer} ref=${tipContainerRef} />
                     ${table.map((group, groupIndex) => html`
@@ -207,7 +208,7 @@ export default function BoardTable(props) {
                 </BoardContainer>
                 <${Sidebar}>
                     <${Piece} color=${currentColor} style=${{ marginTop: '2rem' }} />
-                    <${BoardLabel} style=${{ marginTop: '1rem' }}>棋盘：${SIZE} x ${SIZE}</BoardLabel>
+                    <${BoardLabel} style=${{ marginTop: '1rem' }}>棋盘：${size} x ${size}</BoardLabel>
                     <${BoardLabel} style=${{ marginTop: '1rem' }}>胜利：${MAP_56[type]}子连珠</BoardLabel>
                     <${Link} to="/">
                     <${Button} onClick=${resetTable} style=${{ marginTop: '1.5rem' }}>返回菜单</Button>

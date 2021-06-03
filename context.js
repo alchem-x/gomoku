@@ -27,21 +27,25 @@ export function toggleColor(color) {
     }
 }
 
-export const SIZE = getSizeFromSearch() || 15
-
-function inRange(gi, ii) {
-    return gi >= 0 && gi < SIZE && ii >= 0 && ii < SIZE
+export const SIZE_TYPE = {
+    SMALL: 15,
+    NORMAL: 17,
+    LARGE: 19,
 }
 
-function isWinner(table, gi, ii, WINNER_COUNT = 5) {
+function isWinner(table, gi, ii, WINNER_COUNT, SIZE) {
     const color = table[gi][ii].color
+
+    function inRange(gi, ii) {
+        return gi >= 0 && gi < SIZE && ii >= 0 && ii < SIZE
+    }
 
     function getPieceCount(line) {
         let sum = 1
         for (const fn of line) {
             for (let i = 1; i < WINNER_COUNT; i++) {
                 const [ngi, nii] = fn(i)
-                if (!inRange(ngi, nii)) {
+                if (!inRange(ngi, nii, SIZE)) {
                     break
                 }
                 if (table[ngi][nii].color !== color) {
@@ -79,13 +83,12 @@ function initialTable(size) {
 }
 
 const initialState = {
-    size: SIZE,
-    table: initialTable(SIZE),
-    tableHistory: [initialTable(SIZE)],
+    size: SIZE_TYPE.SMALL,
+    table: initialTable(SIZE_TYPE.SMALL),
+    tableHistory: [initialTable(SIZE_TYPE.SMALL)],
     currentColor: PIECE_COLOR.BLACK,
     previousColor: '',
     winnerColor: '',
-
 }
 
 const handlers = {
@@ -120,7 +123,7 @@ const handlers = {
             currentColor: newCurrentColor,
             tableHistory: newTableHistory,
             previousColor: state.currentColor,
-            winnerColor: isWinner(newTable, gi, ii) ? state.currentColor : state.winnerColor,
+            winnerColor: isWinner(newTable, gi, ii, 5, state.size) ? state.currentColor : state.winnerColor,
         }
     },
     putPiece6(state, payload = []) {
@@ -157,17 +160,7 @@ const handlers = {
             currentColor: newCurrentColor,
             previousColor: state.currentColor,
             tableHistory: newTableHistory,
-            winnerColor: isWinner(newTable, gi, ii, 6) ? state.currentColor : state.winnerColor,
-        }
-    },
-    resetTable(state, payload) {
-        return {
-            ...state,
-            table: initialTable(state.size),
-            tableHistory: [initialTable(state.size)],
-            currentColor: PIECE_COLOR.BLACK,
-            previousColor: '',
-            winnerColor: '',
+            winnerColor: isWinner(newTable, gi, ii, 6, state.size) ? state.currentColor : state.winnerColor,
         }
     },
     repentanceStep5(state, payload) {
@@ -209,6 +202,28 @@ const handlers = {
             winnerColor: '',
         }
     },
+    resetTable(state, payload) {
+        return {
+            ...state,
+            table: initialTable(state.size),
+            tableHistory: [initialTable(state.size)],
+            currentColor: PIECE_COLOR.BLACK,
+            previousColor: '',
+            winnerColor: '',
+        }
+    },
+    setSize(state, payload) {
+        const size = payload
+        return {
+            ...state,
+            size,
+            table: initialTable(size),
+            tableHistory: [initialTable(size)],
+            currentColor: PIECE_COLOR.BLACK,
+            previousColor: '',
+            winnerColor: '',
+        }
+    }
 }
 
 function reducer(state = initialState, action = {}) {
