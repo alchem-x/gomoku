@@ -99,15 +99,16 @@ const WinnerTipBox = styled.div`
 `
 
 const WinnerTipText = styled.span`
-  border-radius: 10px;
-  padding: 8px 32px;
-  background: rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(2px);
+  box-sizing: border-box;
+  border: solid 4px #000;
+  border-radius: 4px;
+  padding: 1rem 2rem;
+  background-color: #fdf2f8;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.10);
+  box-shadow: rgba(0, 0, 0, 0) 0 0 0 0, rgba(0, 0, 0, 0) 0 0 0 0, rgba(0, 0, 0, 0.1) 0 1px 3px 0, rgba(0, 0, 0, 0.06) 0 1px 2px 0;
   font-weight: 700;
   font-size: 72px;
   color: #000;
-  opacity: .9;
   cursor: default;
 `
 
