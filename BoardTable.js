@@ -167,6 +167,7 @@ const BoardLabel = styled.div`
 export default function BoardTable(props) {
 
     const type = props.type
+
     const tipContainerRef = useRef()
 
     const dispatch = useDispatch()
@@ -208,15 +209,15 @@ export default function BoardTable(props) {
                     )}
                 </BoardContainer>
                 <${Sidebar}>
-                    <${Piece} color=${currentColor} style=${{ marginTop: '2rem' }} />
+                    <${Piece} style=${{ marginTop: '2rem' }} color=${currentColor} />
                     <${BoardLabel} style=${{ marginTop: '1rem' }}>棋盘：${size} x ${size}</BoardLabel>
                     <${BoardLabel} style=${{ marginTop: '1rem' }}>胜利：${MAP_56[type]}子连珠</BoardLabel>
                     <${Link} to="/">
-                    <${Button} onClick=${resetTable} style=${{ marginTop: '1.5rem' }}>返回菜单</Button>
+                    <${Button} style=${{ marginTop: '1.5rem' }} onClick=${resetTable}>返回菜单</Button>
                     </Link>
                     ${tableHistory.length > 1 && html`
                         <br />
-                        <${Button} onClick=${resetTable} style=${{ marginTop: '1.5rem' }}>
+                        <${Button} style=${{ marginTop: '1.5rem' }} onClick=${resetTable}>
                             再来一局
                         </Button>
                         <br />
