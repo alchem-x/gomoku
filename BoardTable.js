@@ -56,7 +56,7 @@ const Piece = styled.div`
         `
       case PIECE_COLOR.WHITE:
         return styled.css`
-          background-color: #fff;
+          background-color: #ecfdf5;
         `
     }
   }}
