@@ -49,8 +49,5 @@ export default function App(props) {
                 </Switch>
             </Suspense>
         </Router>
-
-
-
     `
 }
