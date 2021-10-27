@@ -1,34 +1,10 @@
+export const { createElement, createContext, useState, useEffect, useRef, Suspense, lazy } = window['React']
+export const { render } = window['ReactDOM']
+export const { createStore } = window['Redux']
+export const { Provider, createDispatchHook, createSelectorHook, createStoreHook } = window['ReactRedux']
+export const { HashRouter, Route, Switch, Redirect, Link } = window['ReactRouterDOM']
+export  const styled = window['styled']
+
 const htm = window.htm
-const { createElement, createContext, useState, useEffect, useRef, Suspense, lazy } = window.React
-const { render } = window.ReactDOM
-const { createStore } = window.Redux
-const { Provider, createDispatchHook, createSelectorHook, createStoreHook } = window.ReactRedux
-const { HashRouter, Route, Switch, Redirect, Link } = window.ReactRouterDOM
-const styled = window.styled
+export const html = htm.bind(createElement)
 
-const html = htm.bind(createElement)
-
-export {
-    styled,
-    html,
-    // react
-    lazy,
-    render,
-    Suspense,
-    useRef,
-    useState,
-    useEffect,
-    createContext,
-    // react router
-    HashRouter,
-    Route,
-    Link,
-    Switch,
-    Redirect,
-    // redux
-    createStore,
-    Provider,
-    createDispatchHook,
-    createSelectorHook,
-    createStoreHook,
-}
