@@ -1,4 +1,5 @@
-import { html, styled, HashRouter as Router, Route, Switch, Suspense, lazy } from './modules.js'
+import { html, styled, Route, Switch, Suspense, lazy } from './modules.js'
+import HashRouter from './HashRouter.js'
 import Icon from './Icon.js'
 
 const CenterBox = styled.div`
@@ -20,7 +21,7 @@ const LoadingText = styled.span`
 
 const loading = html`
     <${CenterBox}>
-        <${Icon} />
+        <${Icon}></Icon>
         <${LoadingText}>Loading...</LoadingText>
     </CenterBox>
 `
@@ -31,23 +32,23 @@ const BoardTable = lazy(() => import('./BoardTable.js'))
 export default function App(props) {
 
     return html`
-        <${Router}>
+        <${HashRouter}>
             <${Suspense} fallback=${loading}>
                 <${Switch}>
                     <${Route} path="/" exact>
-                        <${Menu} />
+                        <${Menu}></Menu>
                     </Route>
                     <${Route} path="/5">
-                        <${BoardTable} type="5" />
+                        <${BoardTable} type="5"></BoardTable>
                     </Route>
                     <${Route} path="/6">
-                        <${BoardTable} type="6" />
+                        <${BoardTable} type="6"></BoardTable>
                     </Route>
                     <${Route} path="*">
                         <div>No match route</div>
                     </Route>
                 </Switch>
             </Suspense>
-        </Router>
+            </Router>
     `
 }
