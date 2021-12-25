@@ -29,7 +29,8 @@
     "react-is": "^17.0.2",
     "react-redux": "^7.2.6",
     "redux": "^4.1.2",
-    "styled-components": "^5.3.3"
+    "styled-components": "^5.3.3",
+    "wouter-umd": "^2.8.0-alpha.2-1"
   },
   "build": {
     "productName": "Gomoku",
